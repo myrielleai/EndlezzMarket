@@ -1,4 +1,4 @@
-import { Product, BlogPost, LookbookItem, Review } from '@/types';
+import { Product, LookbookItem, Review } from '@/types';
 
 export const PRODUCTS: Product[] = [
   {
@@ -156,59 +156,6 @@ export const PRODUCTS: Product[] = [
     stock: 8,
     sizes: ['S', 'M', 'L'],
     size_stock: { S: 3, M: 3, L: 2 }
-  }
-];
-
-export const BLOG_POSTS: BlogPost[] = [
-  {
-    id: 'post-1',
-    title: '"Endlezz Fits, Endlezz Drip”: How to Rock Your Endlezz Shirts for Any Occasion',
-    excerpt: 'Streetwear isn’t just for the street. Learn how to style your structured cropped polos for casual nights, academic settings, and premium functions.',
-    content: `Streetwear is no longer confined to the sidelines of fashion—it has taken center stage. The Endlezz cropped polo series bridges the gap between active functional gear and structural high-fashion aesthetics.
-
-    Here are three ways to style your Endlezz shirts:
-    
-    1. The Clean Academic: Pair the White Minimalist Cropped Polo with wide-leg beige chinos and clean white sneakers. Layer with a minimal silver chain to hold structure without noise.
-    2. The Brutalist Nightout: Match the Black Minimalist Cropped Polo with relaxed black cargo trousers and utility combat boots. Throw on an oversized denim or leather jacket to project effortless presence.
-    3. The Dynamic Grid: Utilize the Blue Grid Cropped Polo with charcoal grey trousers or structured shorts. The grid pattern gives automatic visual depth, meaning you can keep the rest of the outfit completely muted.
-    
-    Remember: discipline lies in the details. Keep it tidy, keep it silent, and let the silhouettes speak.`,
-    imageUrl: '/img/other/img8.jpeg',
-    date: 'March 02, 2025',
-    slug: 'endlezz-fits-endlezz-drip-style-guide',
-    readTime: '4 min read'
-  },
-  {
-    id: 'post-2',
-    title: 'Endlezz Possibilities: How Our Shirts Let You Wear Your Story',
-    excerpt: 'Our garments act as blank canvases for personal resilience. Explore the connection between physical discipline and minimalist wardrobe design.',
-    content: `Clothes are more than utility; they are extensions of our current state of mind. At Endlezz, every stitch is designed around the philosophy of endurance.
-    
-    In a world filled with endless background noise, choosing minimalist design is a statement of power. It represents silence. It signifies that your path is determined by your internal drive, not the opinions of others.
-    
-    Our fabric selection consists of a heavily combed cotton and polyester weave that resists warping, shrinking, and wear. This represents resilience. We design garments that stand up to the elements of everyday grind, serving as your uniform for long hours of study, work, or gym transformation.
-    
-    When you wear Endlezz, you wear your discipline.`,
-    imageUrl: '/img/other/img5.jpeg',
-    date: 'March 02, 2025',
-    slug: 'endlezz-possibilities-wear-your-story',
-    readTime: '3 min read'
-  },
-  {
-    id: 'post-3',
-    title: 'From Doodles to Drip: The Endlezz Design Journey',
-    excerpt: 'Behind the scenes at the design table. Take an exclusive look at our structural drafting, fabric test cycles, and aesthetic refinement steps.',
-    content: `Every single polo starts as a geometry sketch on a gridded desk. Inspired by brutalist structural architectural layouts and street culture dynamics, we drafted over thirty fits before finalizing the Endlezz Cropped Polo sleeve length, chest volume, and hem drops.
-    
-    We wanted a garment that emphasizes shoulder breadth while falling at the natural waistline. This gives a boxy silhouette that fits all body types with clean lines.
-    
-    Next came color pairing. We rejected hyper-bright standard pigments and focused on curated tones: steel blues, pine greens, muted off-whites, and deep blacks. We then added signature accents: high-contrast linings and precise embroidery details.
-    
-    The final product is a result of tireless feedback, testing, and absolute discipline. We don't release trends—we release armor.`,
-    imageUrl: '/img/other/img4.JPG',
-    date: 'March 02, 2025',
-    slug: 'from-doodles-to-drip-design-journey',
-    readTime: '5 min read'
   }
 ];
 

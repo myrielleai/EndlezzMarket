@@ -1,193 +1,131 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowDown } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { AnimatePresence, motion } from 'framer-motion';
 
 const SLIDES = [
   {
     id: 1,
-    type: 'video',
-    src: '/img/vid2.mov',
-    fallbackSrc: '/img/slider-1.jpg',
-    title: 'STAY',
-    accent: 'ENDLEZZ',
-    subtitle: 'THE UNIFORM OF SILENT DISCIPLINE',
+    src: '/img/slider-1.jpg',
+    mobile: '/img/min/grid2.jpg',
+    kicker: 'Grid collection',
+    title: ['Stay', 'Endlezz'],
+    cta: { label: 'Shop now', href: '/shop' },
+    pos: 'md:object-[50%_35%]',
   },
   {
     id: 2,
-    type: 'image',
-    src: '/img/slider-2.jpg',
-    title: 'FASHION',
-    accent: 'STORIES',
-    subtitle: 'WEAR YOUR PHYSICAL TRANSFORMATION',
+    src: '/img/min/ang3.jpg',
+    mobile: '/img/min/ang3.jpg',
+    kicker: 'Angel collection',
+    title: ['Piped', 'Linings'],
+    cta: { label: 'Shop Angel', href: '/shop?collection=angel' },
+    pos: 'md:object-[50%_30%]',
   },
   {
     id: 3,
-    type: 'image',
-    src: '/img/slider-3.jpg',
-    title: 'RAW',
-    accent: 'RESILIENCE',
-    subtitle: 'ENGINEERED TO REMAIN STRUCTURED',
+    src: '/img/slider-2.jpg',
+    mobile: '/img/min/min3.jpg',
+    kicker: 'Every colourway',
+    title: ['The', 'Rack'],
+    cta: { label: 'Shop all colours', href: '/shop' },
+    pos: 'md:object-center',
   },
 ];
 
+const DURATION = 7000;
+
 const HeroSection: React.FC = () => {
-  const [currentIdx, setCurrentIdx] = useState(0);
+  const [idx, setIdx] = useState(0);
+  const [paused, setPaused] = useState(false);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentIdx((prev) => (prev + 1) % SLIDES.length);
-    }, 8000); // Fades every 8 seconds
-    return () => clearInterval(timer);
-  }, []);
+    if (paused) return;
+    const t = setTimeout(() => setIdx((i) => (i + 1) % SLIDES.length), DURATION);
+    return () => clearTimeout(t);
+  }, [idx, paused]);
 
-  const slide = SLIDES[currentIdx];
-
-  const handleScrollDown = () => {
-    const target = document.getElementById('overview');
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+  const slide = SLIDES[idx];
 
   return (
-    <section className="relative w-full h-[calc(100vh-104px)] bg-black overflow-hidden flex items-center justify-center select-none">
-      {/* Background loop filters */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/70 z-10" />
-      <div className="absolute inset-0 bg-noise z-10" />
-
-      {/* Slider Slides */}
-      <AnimatePresence mode="wait">
-        <motion.div
+    <section
+      className="relative w-full h-[calc(100svh-var(--header-h))] min-h-[520px] max-h-[980px] overflow-hidden bg-paper-2"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      aria-roledescription="carousel"
+    >
+      <AnimatePresence initial={false}>
+        <motion.picture
           key={slide.id}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          initial={{ opacity: 0, scale: 1.06 }}
+          animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 1.2, ease: 'easeInOut' }}
-          className="absolute inset-0 w-full h-full"
+          transition={{ opacity: { duration: 0.9 }, scale: { duration: 7, ease: 'linear' } }}
+          className="absolute inset-0"
         >
-          {slide.type === 'video' ? (
-            <video
-              src={slide.src}
-              poster={slide.fallbackSrc}
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="object-cover w-full h-full scale-[1.03]"
-            />
-          ) : (
-            <img
-              src={slide.src}
-              alt={slide.title}
-              className="object-cover w-full h-full scale-[1.03] animate-pulse-slow"
-              style={{ animationDuration: '20s' }}
-            />
-          )}
-        </motion.div>
+          <source media="(max-width: 767px)" srcSet={slide.mobile} />
+          <img src={slide.src} alt="" className={`w-full h-full object-cover object-top ${slide.pos}`} />
+        </motion.picture>
       </AnimatePresence>
 
-      {/* Cinematic Text Content Grid */}
-      <div className="relative z-20 text-center max-w-5xl px-6 flex flex-col items-center justify-center h-full">
+      <div className="absolute inset-0 bg-gradient-to-t from-ink/55 via-ink/5 to-transparent pointer-events-none" />
+
+      <div className="absolute inset-0 flex flex-col justify-end px-4 sm:px-6 lg:px-10 pb-6 sm:pb-10 text-white">
         <AnimatePresence mode="wait">
-          <motion.div
-            key={slide.id}
-            initial="hidden"
-            animate="visible"
-            exit="hidden"
-            variants={{
-              hidden: { opacity: 0 },
-              visible: {
-                opacity: 1,
-                transition: {
-                  staggerChildren: 0.15,
-                },
-              },
-            }}
-            className="flex flex-col items-center"
-          >
-            {/* Subtitle Mono Label */}
-            <motion.span
-              variants={{
-                hidden: { opacity: 0, y: 15 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: 'easeOut' } },
-              }}
-              className="font-mono text-[10px] sm:text-xs uppercase tracking-[0.4em] text-zinc-400 mb-6 bg-black/40 px-3 py-1 backdrop-blur-sm border border-zinc-900/60"
+          <motion.div key={slide.id} initial="hide" animate="show" exit="hide" variants={{ show: { transition: { staggerChildren: 0.08 } } }}>
+            <motion.p
+              variants={{ hide: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0 } }}
+              className="label mb-3 inline-flex items-center gap-2 bg-ink/70 backdrop-blur-sm px-2.5 py-1.5"
             >
-              {slide.subtitle}
-            </motion.span>
-
-            {/* Main Title Heading */}
-            <motion.h1
-              variants={{
-                hidden: { opacity: 0, y: 30 },
-                visible: { opacity: 1, y: 0, transition: { duration: 1.0, ease: [0.16, 1, 0.3, 1] } },
-              }}
-              className="text-white text-5xl sm:text-7xl md:text-9xl font-extrabold uppercase tracking-tight leading-none mb-2"
-            >
-              {slide.title}
-            </motion.h1>
-
-            {/* Accent Highlighted Word */}
-            <motion.h2
-              variants={{
-                hidden: { opacity: 0, y: 35 },
-                visible: { opacity: 1, y: 0, transition: { duration: 1.0, ease: [0.16, 1, 0.3, 1] } },
-              }}
-              className="text-zinc-400 font-sans italic tracking-widest text-4xl sm:text-6xl md:text-8xl font-black uppercase"
-            >
-              {slide.accent}
-            </motion.h2>
-
-            {/* CTA Shop Buttons */}
-            <motion.div
-              variants={{
-                hidden: { opacity: 0, y: 20 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay: 0.3 } },
-              }}
-              className="flex items-center gap-4 mt-10"
-            >
-              <button
-                onClick={handleScrollDown}
-                className="bg-white text-black font-mono text-[10px] tracking-widest uppercase px-8 py-4 font-bold border border-white hover:bg-transparent hover:text-white transition-all duration-300 flex items-center gap-2 cursor-pointer shadow-2xl"
-              >
-                EXPLORE COLLECTION
-              </button>
-            </motion.div>
+              <span className="w-2 h-2 bg-signal inline-block" /> {slide.kicker}
+            </motion.p>
+            <h1 className="display text-[22vw] sm:text-[17vw] lg:text-[13.5vw] leading-[0.8]">
+              {slide.title.map((w) => (
+                <span key={w} className="block overflow-hidden">
+                  <motion.span
+                    className="block"
+                    variants={{ hide: { y: '100%' }, show: { y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } } }}
+                  >
+                    {w}
+                  </motion.span>
+                </span>
+              ))}
+            </h1>
           </motion.div>
         </AnimatePresence>
+
+        <div className="mt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-5">
+          <Link
+            href={slide.cta.href}
+            className="inline-flex items-center justify-center gap-3 bg-paper text-ink h-12 px-7 text-[13px] font-bold uppercase tracking-wide hover:bg-signal hover:text-white transition-colors self-start"
+          >
+            {slide.cta.label} <span aria-hidden>→</span>
+          </Link>
+
+          <div className="flex items-center gap-4">
+            <span className="font-mono text-xs tabular-nums">
+              {String(idx + 1).padStart(2, '0')} / {String(SLIDES.length).padStart(2, '0')}
+            </span>
+            <div className="flex gap-1.5">
+              {SLIDES.map((s, i) => (
+                <button key={s.id} onClick={() => setIdx(i)} aria-label={`Go to slide ${i + 1}`} className="relative h-[3px] w-10 sm:w-14 bg-white/35 overflow-hidden">
+                  {i === idx && (
+                    <motion.span
+                      key={`${s.id}-${paused}`}
+                      className="absolute inset-y-0 left-0 bg-white"
+                      initial={{ width: paused ? '100%' : '0%' }}
+                      animate={{ width: '100%' }}
+                      transition={{ duration: paused ? 0 : DURATION / 1000, ease: 'linear' }}
+                    />
+                  )}
+                  {i < idx && <span className="absolute inset-0 bg-white" />}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
-
-      {/* Slide Indicators Navigation */}
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 flex gap-3">
-        {SLIDES.map((s, idx) => (
-          <button
-            key={s.id}
-            onClick={() => setCurrentIdx(idx)}
-            className={`h-1.5 transition-all duration-305 ${
-              idx === currentIdx ? 'w-8 bg-white' : 'w-2 bg-zinc-800 hover:bg-zinc-650'
-            }`}
-          />
-        ))}
-      </div>
-
-      {/* Down indicator */}
-      <button
-        onClick={handleScrollDown}
-        className="absolute bottom-6 right-8 z-20 hidden md:flex flex-col items-center gap-2 text-zinc-500 hover:text-white transition-colors duration-300"
-      >
-        <span className="text-[9px] font-mono tracking-widest vertical-text uppercase">SCROLL</span>
-        <ArrowDown className="w-4 h-4 animate-bounce" />
-      </button>
-
-      {/* CSS layout style for vertical scroll word */}
-      <style jsx global>{`
-        .vertical-text {
-          writing-mode: vertical-rl;
-          text-orientation: mixed;
-        }
-      `}</style>
     </section>
   );
 };

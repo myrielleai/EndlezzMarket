@@ -1,102 +1,113 @@
 @import "tailwindcss";
 
-:root {
-  --font-space-grotesk: var(--font-space-grotesk);
-  --font-montserrat: var(--font-montserrat);
-}
+/*
+  ENDLEZZ — streetwear storefront theme
+  Paper base, ink type, one electric accent. Photography carries the colour.
+*/
 
 @theme {
-  --font-sans: var(--font-montserrat), sans-serif;
-  --font-display: var(--font-space-grotesk), monospace;
-  --font-mono: var(--font-space-grotesk), monospace;
-  
-  --color-brand-dark: #000000;
-  --color-brand-zinc: #09090b;
-  --color-brand-muted: #71717a;
-  --color-brand-border: #27272a;
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-anton), Impact, "Arial Narrow", sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+
+  --color-paper: #f3f2ee;
+  --color-paper-2: #e8e7e2;
+  --color-ink: #0d0d0d;
+  --color-ink-2: #2a2a2a;
+  --color-mute: #6f6e69;
+  --color-line: #d9d8d2;
+  --color-signal: #2340ff;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Base resets & scroll behavior */
+:root {
+  --header-h: 96px;
+}
+
 html {
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  font-family: var(--font-montserrat), sans-serif;
-  background-color: #000000;
-  color: #f4f4f5;
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
   overflow-x: hidden;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-space-grotesk), monospace;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.005em;
 }
 
-/* Elegant brutalist custom scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+::selection {
+  background: var(--color-ink);
+  color: var(--color-paper);
 }
 
-::-webkit-scrollbar-track {
-  background: #000000;
+/* Thin, flat scrollbar */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--color-paper); }
+::-webkit-scrollbar-thumb { background: #b9b8b2; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-ink); }
+
+/* Display type helper: condensed poster caps */
+.display {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  line-height: 0.86;
+  letter-spacing: -0.01em;
 }
 
-::-webkit-scrollbar-thumb {
-  background: #27272a;
-  border-radius: 0px;
+/* Small technical label */
+.label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #52525b;
-}
-
-/* Infinite Text Marquee Keyframes */
+/* Marquees */
 @keyframes marquee {
-  0% {
-    transform: translateX(0%);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
 }
-
-.animate-marquee-scroll {
+.marquee {
   display: flex;
   width: max-content;
-  animation: marquee 25s linear infinite;
+  animation: marquee 40s linear infinite;
+}
+.marquee-fast { animation-duration: 22s; }
+.marquee:hover { animation-play-state: paused; }
+
+/* Animated underline for text links */
+.link-u {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.4s var(--ease-out-expo);
+}
+.link-u:hover,
+.link-u[aria-current="page"] {
+  background-size: 100% 1px;
 }
 
-.animate-marquee-scroll:hover {
-  animation-play-state: paused;
-}
-
-/* Glassmorphism panel styles */
+/* Legacy helpers still referenced by inner pages */
 .glass-panel {
-  background: rgba(9, 9, 11, 0.7);
+  background: rgba(243, 242, 238, 0.85);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(39, 39, 42, 0.5);
+  border: 1px solid var(--color-line);
 }
+.image-zoom-trigger { overflow: hidden; }
+.image-zoom-trigger img { transition: transform 0.7s var(--ease-out-expo); }
+.image-zoom-trigger:hover img { transform: scale(1.04); }
+.bg-noise { background-image: none; }
+.text-balance { text-wrap: balance; }
 
-/* Subtle image zoom transition */
-.image-zoom-trigger {
-  overflow: hidden;
-}
-.image-zoom-trigger img {
-  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.image-zoom-trigger:hover img {
-  transform: scale(1.05);
-}
-
-/* Noise overlay effect for cinematic look */
-.bg-noise {
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
-}
-
-/* Standard utilities */
-.text-balance {
-  text-wrap: balance;
+@media (prefers-reduced-motion: reduce) {
+  .marquee { animation: none; }
+  html { scroll-behavior: auto; }
 }

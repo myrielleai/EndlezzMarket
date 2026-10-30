@@ -65,17 +65,6 @@ export interface Review {
   createdAt: string;
 }
 
-export interface BlogPost {
-  id: string;
-  title: string;
-  excerpt: string;
-  content: string;
-  imageUrl: string;
-  date: string;
-  slug: string;
-  readTime: string;
-}
-
 export interface LookbookItem {
   id: string;
   title: string;

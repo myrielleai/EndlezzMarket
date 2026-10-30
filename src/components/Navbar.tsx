@@ -1,230 +1,214 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useStore } from '@/context/StoreContext';
-import { Search, User, ShoppingBag, Menu, X, ChevronDown } from 'lucide-react';
+import { Search, ShoppingBag, Menu, X, ArrowUpRight } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
+
+const ANNOUNCEMENTS = [
+  'Free shipping on orders over ₱2,000 — PH wide',
+  'Orders ship in 2–4 business days',
+];
+
+const COLLECTIONS = [
+  { label: 'Grid', href: '/shop?collection=grid', img: '/img/min/grid1.jpg', note: 'Structure & symmetry' },
+  { label: 'Minimalist', href: '/shop?collection=minimalist', img: '/img/min/min1.jpg', note: 'Clean silhouettes' },
+  { label: 'Angel', href: '/shop?collection=angel', img: '/img/min/ang2.jpg', note: 'Piped linings' },
+];
 
 const Navbar: React.FC = () => {
   const pathname = usePathname();
-  const {
-    cartCount,
-    setIsCartOpen,
-    isMobileMenuOpen,
-    setIsMobileMenuOpen,
-    setIsSearchOpen,
-    user
-  } = useStore();
+  const { cartCount, setIsCartOpen, isMobileMenuOpen, setIsMobileMenuOpen, setIsSearchOpen } = useStore();
+  const [megaOpen, setMegaOpen] = useState(false);
+  const [msgIdx, setMsgIdx] = useState(0);
 
-  const handleCartClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setIsCartOpen(true);
-  };
+  useEffect(() => {
+    const t = setInterval(() => setMsgIdx((i) => (i + 1) % ANNOUNCEMENTS.length), 4000);
+    return () => clearInterval(t);
+  }, []);
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
+  useEffect(() => {
+    setMegaOpen(false);
+  }, [pathname]);
 
-  const navLinks = [
-    {
-      title: 'BEHIND THE BRAND',
-      subLinks: [
-        { label: 'ABOUT', href: '/#about' },
-        { label: 'CONTACT US', href: '/#contact' },
-      ],
-    },
-    {
-      title: 'FEATURED',
-      subLinks: [
-        { label: 'LOOKBOOK', href: '/lookbook' },
-        { label: 'BLOG', href: '/blog' },
-      ],
-    },
-    {
-      title: 'SHOP',
-      subLinks: [
-        { label: 'COLLECTIONS', href: '/shop' },
-        { label: 'SIZE CHART', href: '/#sizechart' },
-      ],
-    },
+  const primary = [
+    { label: 'Shop all', href: '/shop' },
+    { label: 'Lookbook', href: '/lookbook' },
   ];
 
   return (
     <>
-      <header className="fixed top-0 left-0 w-full z-[80] select-none bg-black border-b border-zinc-900">
-        {/* Rolling Banner Ticker */}
-        <div className="bg-white text-black py-2 overflow-hidden text-[9px] sm:text-xs font-mono uppercase tracking-[0.2em] font-semibold border-b border-zinc-800">
-          <div className="animate-marquee-scroll whitespace-nowrap">
-            <span className="mx-12">FREE SHIPPING ON ORDERS OVER P2000 IN THE PHILIPPINES</span>
-            <span className="mx-12">|</span>
-            <span className="mx-12">20% MAPUAN DISCOUNT</span>
-            <span className="mx-12">|</span>
-            <span className="mx-12">10% OFF ON 2024 COLLECTION</span>
-            <span className="mx-12">|</span>
-            <span className="mx-12">5% OFF CODE: BLANCAFLOR</span>
-            <span className="mx-12">|</span>
-            <span className="mx-12">FREE SHIPPING ON ORDERS OVER P2000 IN THE PHILIPPINES</span>
-            <span className="mx-12">|</span>
-            <span className="mx-12">20% MAPUAN DISCOUNT</span>
-            <span className="mx-12">|</span>
-            <span className="mx-12">10% OFF ON 2024 COLLECTION</span>
-            <span className="mx-12">|</span>
-            <span className="mx-12">5% OFF CODE: BLANCAFLOR</span>
-          </div>
+      <header className="fixed top-0 left-0 w-full z-[80]" onMouseLeave={() => setMegaOpen(false)}>
+        {/* Announcement bar */}
+        <div className="h-8 bg-ink text-paper flex items-center justify-center overflow-hidden">
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={msgIdx}
+              initial={{ y: 12, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -12, opacity: 0 }}
+              transition={{ duration: 0.35 }}
+              className="label !text-[10px] sm:!text-[11px] px-4 text-center truncate"
+            >
+              {ANNOUNCEMENTS[msgIdx]}
+            </motion.p>
+          </AnimatePresence>
         </div>
 
-        {/* Main Nav Area */}
-        <div className="px-6 md:px-12 py-5 flex items-center justify-between bg-black/80 backdrop-blur-md">
-          {/* Hamburger trigger for Mobile */}
-          <button
-            onClick={toggleMobileMenu}
-            className="md:hidden text-zinc-400 hover:text-white p-2"
-          >
-            <Menu className="w-5 h-5" />
-          </button>
-
-          {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center gap-8 text-xs font-mono tracking-widest text-zinc-400">
-            {navLinks.map((item, idx) => (
-              <div key={idx} className="relative group py-2">
-                <button className="flex items-center gap-1 hover:text-white transition-colors duration-300 uppercase">
-                  {item.title} <ChevronDown className="w-3 h-3 group-hover:rotate-180 transition-transform duration-300" />
+        {/* Main bar */}
+        <div className="h-16 bg-paper/95 backdrop-blur-md border-b border-line relative">
+          <div className="h-full px-4 sm:px-6 lg:px-10 grid grid-cols-[1fr_auto_1fr] items-center">
+            {/* Left */}
+            <div className="flex items-center">
+              <button
+                onClick={() => setIsMobileMenuOpen(true)}
+                className="md:hidden -ml-2 p-2"
+                aria-label="Open menu"
+              >
+                <Menu className="w-5 h-5" />
+              </button>
+              <nav className="hidden md:flex items-center gap-7 text-[13px] font-semibold uppercase tracking-wide">
+                <button
+                  onMouseEnter={() => setMegaOpen(true)}
+                  onClick={() => setMegaOpen((o) => !o)}
+                  className={`link-u py-1 uppercase ${megaOpen ? 'bg-[length:100%_1px]' : ''}`}
+                  aria-expanded={megaOpen}
+                >
+                  Collections
                 </button>
-                <div className="absolute top-full left-0 mt-1 hidden group-hover:block bg-zinc-950 border border-zinc-850 p-4 min-w-[200px] shadow-xl">
+                {primary.map((l) => (
+                  <Link
+                    key={l.href}
+                    href={l.href}
+                    onMouseEnter={() => setMegaOpen(false)}
+                    aria-current={pathname === l.href ? 'page' : undefined}
+                    className="link-u py-1"
+                  >
+                    {l.label}
+                  </Link>
+                ))}
+              </nav>
+            </div>
+
+            {/* Logo */}
+            <Link href="/" className="justify-self-center" aria-label="Endlezz home">
+              <img src="/img/logo.png" alt="Endlezz" className="h-6 sm:h-7 w-auto mix-blend-multiply" />
+            </Link>
+
+            {/* Right */}
+            <div className="flex items-center justify-end gap-1 sm:gap-5 text-[13px] font-semibold uppercase tracking-wide">
+              <button onClick={() => setIsSearchOpen(true)} className="p-2 sm:p-0 flex items-center gap-2 link-u uppercase" aria-label="Search">
+                <Search className="w-[18px] h-[18px] sm:hidden" />
+                <span className="hidden sm:inline">Search</span>
+              </button>
+              <button
+                onClick={() => setIsCartOpen(true)}
+                className="p-2 sm:p-0 flex items-center gap-1.5 uppercase"
+                aria-label={`Bag, ${cartCount} items`}
+              >
+                <ShoppingBag className="w-[18px] h-[18px] sm:hidden" />
+                <span className="hidden sm:inline link-u">Bag</span>
+                <span
+                  className={`font-mono text-[11px] min-w-5 h-5 px-1 inline-flex items-center justify-center ${
+                    cartCount > 0 ? 'bg-signal text-white' : 'bg-ink/10 text-ink'
+                  }`}
+                >
+                  {cartCount}
+                </span>
+              </button>
+            </div>
+          </div>
+
+          {/* Mega menu */}
+          <AnimatePresence>
+            {megaOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                className="hidden md:block absolute top-full left-0 w-full bg-paper border-b border-line"
+              >
+                <div className="px-10 py-8 grid grid-cols-[220px_1fr] gap-10">
                   <div className="flex flex-col gap-3">
-                    {item.subLinks.map((sub, sIdx) => (
-                      <Link
-                        key={sIdx}
-                        href={sub.href}
-                        className="hover:text-white transition-colors duration-200 text-[10px]"
-                      >
-                        {sub.label}
+                    <span className="label text-mute">Shop by</span>
+                    <Link href="/shop" className="display text-4xl hover:text-signal transition-colors">All pieces</Link>
+                    {COLLECTIONS.map((c) => (
+                      <Link key={c.label} href={c.href} className="display text-4xl hover:text-signal transition-colors">
+                        {c.label}
+                      </Link>
+                    ))}
+                    <Link href="/#sizechart" className="label mt-4 link-u self-start">Size guide</Link>
+                  </div>
+                  <div className="grid grid-cols-3 gap-3">
+                    {COLLECTIONS.map((c) => (
+                      <Link key={c.label} href={c.href} className="group relative aspect-[4/3] overflow-hidden bg-paper-2">
+                        <img
+                          src={c.img}
+                          alt=""
+                          className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-x-0 bottom-0 p-3 flex items-end justify-between bg-gradient-to-t from-ink/60 to-transparent text-white">
+                          <div>
+                            <p className="display text-2xl">{c.label}</p>
+                            <p className="label !text-[10px] opacity-80">{c.note}</p>
+                          </div>
+                          <ArrowUpRight className="w-4 h-4" />
+                        </div>
                       </Link>
                     ))}
                   </div>
                 </div>
-              </div>
-            ))}
-            {/* Direct Admin link if user is admin */}
-            {user?.role === 'admin' && (
-              <Link href="/admin" className="text-white hover:text-red-500 font-bold border border-red-900 px-2 py-1 transition-all">
-                DASHBOARD
-              </Link>
+              </motion.div>
             )}
-          </nav>
-
-          {/* Centered Logo Branding */}
-          <div className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center">
-            <Link href="/" className="flex items-center gap-2 group">
-              <img
-                src="/img/logo.png"
-                alt="Endlezz Market Logo"
-                className="h-8 w-auto filter invert brightness-200 group-hover:rotate-6 transition-transform duration-500"
-              />
-              <span className="font-display font-bold tracking-[0.3em] text-white text-base sm:text-lg select-none group-hover:opacity-80 transition-opacity">
-                ENDLEZZ
-              </span>
-            </Link>
-          </div>
-
-          {/* Right Action Icons */}
-          <div className="flex items-center gap-4 text-zinc-400">
-            <button
-              onClick={() => setIsSearchOpen(true)}
-              className="p-2 hover:text-white transition-colors cursor-pointer"
-            >
-              <Search className="w-5 h-5" />
-            </button>
-            <Link
-              href="/profile"
-              className="p-2 hover:text-white transition-colors"
-            >
-              <User className={`w-5 h-5 ${user ? 'text-white border-b-2 border-b-zinc-400 pb-0.5' : ''}`} />
-            </Link>
-            <button
-              onClick={handleCartClick}
-              className="p-2 hover:text-white transition-colors relative"
-            >
-              <ShoppingBag className="w-5 h-5" />
-              {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-white text-black text-[9px] font-mono font-black w-4.5 h-4.5 rounded-full flex items-center justify-center shadow-lg border border-black scale-95">
-                  {cartCount}
-                </span>
-              )}
-            </button>
-          </div>
+          </AnimatePresence>
         </div>
       </header>
 
-      {/* Slide-out Mobile Navigation Drawer */}
+      {/* Mobile drawer */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <>
             <motion.div
               initial={{ opacity: 0 }}
-              animate={{ opacity: 0.6 }}
+              animate={{ opacity: 0.4 }}
               exit={{ opacity: 0 }}
-              onClick={toggleMobileMenu}
-              className="fixed inset-0 bg-black z-[90]"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="fixed inset-0 bg-ink z-[90]"
             />
-            <motion.div
+            <motion.aside
               initial={{ x: '-100%' }}
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
-              transition={{ type: 'spring', damping: 28, stiffness: 220 }}
-              className="fixed top-0 left-0 h-full w-[280px] bg-zinc-950 border-r border-zinc-900 z-[100] px-6 py-12 flex flex-col justify-between"
+              transition={{ type: 'spring', damping: 30, stiffness: 260 }}
+              className="fixed top-0 left-0 h-full w-[88%] max-w-[380px] bg-paper z-[100] flex flex-col"
             >
-              <div>
-                <div className="flex items-center justify-between mb-8 border-b border-zinc-900 pb-4">
-                  <div className="flex items-center gap-2">
-                    <img src="/img/logo.png" alt="Logo" className="h-6 filter invert" />
-                    <span className="font-display font-bold tracking-widest text-sm text-white">ENDLEZZ</span>
-                  </div>
-                  <button onClick={toggleMobileMenu} className="text-zinc-500 hover:text-white">
-                    <X className="w-5 h-5" />
-                  </button>
+              <div className="h-16 px-4 flex items-center justify-between border-b border-line">
+                <img src="/img/logo.png" alt="Endlezz" className="h-6 mix-blend-multiply" />
+                <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 -mr-2" aria-label="Close menu">
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              <nav className="flex-1 overflow-y-auto px-4 py-6 flex flex-col">
+                {[{ label: 'Shop all', href: '/shop' }, ...COLLECTIONS, { label: 'Lookbook', href: '/lookbook' }].map((l) => (
+                  <Link
+                    key={l.label}
+                    href={l.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="display text-5xl py-2 border-b border-line flex items-center justify-between"
+                  >
+                    {l.label}
+                    <ArrowUpRight className="w-5 h-5" />
+                  </Link>
+                ))}
+                <div className="mt-6 flex flex-col gap-3 label">
+                  <Link href="/#sizechart" onClick={() => setIsMobileMenuOpen(false)}>Size guide</Link>
                 </div>
-
-                <nav className="flex flex-col gap-6 font-mono text-sm tracking-widest">
-                  {navLinks.map((item, idx) => (
-                    <div key={idx} className="flex flex-col gap-2">
-                      <span className="text-[10px] text-zinc-650 uppercase font-black tracking-[0.2em]">
-                        {item.title}
-                      </span>
-                      <div className="flex flex-col gap-2 pl-2">
-                        {item.subLinks.map((sub, sIdx) => (
-                          <Link
-                            key={sIdx}
-                            href={sub.href}
-                            onClick={toggleMobileMenu}
-                            className="text-zinc-300 hover:text-white transition-colors"
-                          >
-                            {sub.label}
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                  {user?.role === 'admin' && (
-                    <Link
-                      href="/admin"
-                      onClick={toggleMobileMenu}
-                      className="text-red-500 font-bold border border-red-900 px-3 py-2 text-center transition-all bg-red-950/20"
-                    >
-                      ADMIN PANEL
-                    </Link>
-                  )}
-                </nav>
-              </div>
-
-              <div className="text-[10px] font-mono text-zinc-500 border-t border-zinc-900 pt-4">
-                © {new Date().getFullYear()} ENDLEZZ MARKET
-                <br />
-                DISCIPLINE • SILENCE • RESILIENCE
-              </div>
-            </motion.div>
+              </nav>
+              <div className="px-4 py-4 border-t border-line label text-mute">Discipline · Silence · Resilience</div>
+            </motion.aside>
           </>
         )}
       </AnimatePresence>

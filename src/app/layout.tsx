@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Space_Grotesk, Montserrat } from 'next/font/google';
+import { Anton, Archivo, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import { StoreProvider } from '@/context/StoreContext';
 import Navbar from '@/components/Navbar';
@@ -8,30 +8,38 @@ import Footer from '@/components/Footer';
 import GlobalNotification from '@/components/GlobalNotification';
 import SearchModal from '@/components/SearchModal';
 
-const spaceGrotesk = Space_Grotesk({
-  variable: '--font-space-grotesk',
+const anton = Anton({
+  variable: '--font-anton',
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
+  weight: '400',
   display: 'swap',
 });
 
-const montserrat = Montserrat({
-  variable: '--font-montserrat',
+const archivo = Archivo({
+  variable: '--font-archivo',
   subsets: ['latin'],
-  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+  weight: ['400', '500', '600', '700', '800'],
+  display: 'swap',
+});
+
+const jetbrains = JetBrains_Mono({
+  variable: '--font-jetbrains',
+  subsets: ['latin'],
+  weight: ['400', '500', '700'],
   display: 'swap',
 });
 
 export const metadata: Metadata = {
   title: {
-    default: 'ENDLEZZ MARKET | Premium Brutalist Streetwear',
-    template: '%s | ENDLEZZ MARKET'
+    default: 'ENDLEZZ — Streetwear, Manila',
+    template: '%s | ENDLEZZ',
   },
-  description: 'Immersive full-stack streetwear ecommerce platform. Built around the core human principles: Discipline, Silence, Resilience. Explore the Grid, Minimalist, and Angel Collections.',
-  keywords: ['streetwear', 'brutalist fashion', 'oversized tees', 'cropped polo', 'discipline', 'silence', 'resilience', 'philippines clothing', 'endlezz market'],
+  description:
+    'Boxy cropped polos and camp shirts built around Discipline, Silence, Resilience. Shop the Grid, Minimalist and Angel collections.',
+  keywords: ['streetwear', 'cropped polo', 'camp shirt', 'philippines clothing', 'endlezz market', 'manila streetwear'],
   openGraph: {
-    title: 'ENDLEZZ MARKET | Streetwear Redefined',
-    description: 'Immersive streetwear experience engineered with discipline and resilience.',
+    title: 'ENDLEZZ — Streetwear, Manila',
+    description: 'Boxy cropped polos and camp shirts. Grid, Minimalist and Angel collections.',
     url: 'https://endlezz.market',
     siteName: 'Endlezz Market',
     locale: 'en_PH',
@@ -39,44 +47,34 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'ENDLEZZ MARKET',
-    description: 'Premium streetwear built around structural discipline.',
+    title: 'ENDLEZZ',
+    description: 'Boxy cropped polos and camp shirts.',
   },
-  robots: {
-    index: true,
-    follow: true,
-  }
+  robots: { index: true, follow: true },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html
       lang="en"
-      className={`${spaceGrotesk.variable} ${montserrat.variable} h-full antialiased dark`}
-      style={{ colorScheme: 'dark' }}
+      className={`${anton.variable} ${archivo.variable} ${jetbrains.variable} h-full antialiased`}
+      style={{ colorScheme: 'light' }}
     >
-      <body className="min-h-full bg-black text-zinc-100 font-sans flex flex-col selection:bg-zinc-800 selection:text-white overflow-x-hidden">
+      <body className="min-h-full bg-paper text-ink font-sans flex flex-col overflow-x-hidden">
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[200] focus:bg-ink focus:text-paper focus:px-4 focus:py-2 label"
+        >
+          Skip to content
+        </a>
         <StoreProvider>
-          {/* Global UI Components */}
           <GlobalNotification />
           <SearchModal />
-          
-          {/* Header Navigation */}
           <Navbar />
-          
-          {/* Slide-out bag drawer */}
           <CartDrawer />
-          
-          {/* Main page content area */}
-          <main className="flex-grow flex flex-col pt-[104px]">
+          <main id="main" className="flex-grow flex flex-col pt-[var(--header-h)]">
             {children}
           </main>
-          
-          {/* Site footer */}
           <Footer />
         </StoreProvider>
       </body>
