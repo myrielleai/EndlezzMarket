@@ -9,7 +9,6 @@ const SLIDES = [
     id: 1,
     src: '/img/slider-1.jpg',
     mobile: '/img/min/grid2.jpg',
-    kicker: 'Grid collection',
     title: ['Stay', 'Endlezz'],
     cta: { label: 'Shop now', href: '/shop' },
     pos: 'md:object-[50%_35%]',
@@ -18,7 +17,6 @@ const SLIDES = [
     id: 2,
     src: '/img/min/ang3.jpg',
     mobile: '/img/min/ang3.jpg',
-    kicker: 'Angel collection',
     title: ['Piped', 'Linings'],
     cta: { label: 'Shop Angel', href: '/shop?collection=angel' },
     pos: 'md:object-[50%_30%]',
@@ -27,7 +25,6 @@ const SLIDES = [
     id: 3,
     src: '/img/slider-2.jpg',
     mobile: '/img/min/min3.jpg',
-    kicker: 'Every colourway',
     title: ['The', 'Rack'],
     cta: { label: 'Shop all colours', href: '/shop' },
     pos: 'md:object-center',
@@ -74,12 +71,6 @@ const HeroSection: React.FC = () => {
       <div className="absolute inset-0 flex flex-col justify-end px-4 sm:px-6 lg:px-10 pb-6 sm:pb-10 text-white">
         <AnimatePresence mode="wait">
           <motion.div key={slide.id} initial="hide" animate="show" exit="hide" variants={{ show: { transition: { staggerChildren: 0.08 } } }}>
-            <motion.p
-              variants={{ hide: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0 } }}
-              className="label mb-3 inline-flex items-center gap-2 bg-ink/70 backdrop-blur-sm px-2.5 py-1.5"
-            >
-              <span className="w-2 h-2 bg-signal inline-block" /> {slide.kicker}
-            </motion.p>
             <h1 className="display text-[22vw] sm:text-[17vw] lg:text-[13.5vw] leading-[0.8]">
               {slide.title.map((w) => (
                 <span key={w} className="block overflow-hidden">
